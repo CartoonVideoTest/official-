@@ -17,6 +17,7 @@ SOURCES = {
 # 侧边栏搜索区域
 with st.sidebar:
     st.title("超简洁影视搜索")
+    st.write("暂只支持电影播放")
     videoname = st.text_input("输入影视名称：", key="name")
     source_name = st.selectbox("选择源：", list(SOURCES.keys()))
 
