@@ -167,8 +167,9 @@ def main():
                                 )
                                 if selected_ep:
                                     episode_url = episodes[selected_ep]
-                                    st.text(f"选中集数链接: {episode_url}")
+                                    st.text(f"选中集数链接: https://jx.xmflv.cc/?url={episode_url}")
 
 if __name__ == "__main__":
 
     main()
+
