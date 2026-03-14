@@ -1,6 +1,6 @@
 import streamlit as st
-from ori_scripts.bilibili_script import bilibili_search as search_b
-from ori_scripts.bilibili_script import bilibili_detail as detail_b
+from .ori_scripts.bilibili_script import bilibili_search as search_b
+from .ori_scripts.bilibili_script import bilibili_detail as detail_b
 
 
 
