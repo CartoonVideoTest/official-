@@ -88,7 +88,7 @@ else:
 
                 col1, col2 = st.columns(2)
                 with col1:
-                    st.image(r"C:\Users\MI\Desktop\已完成\test.webp")
+                    st.image(img_url)
 
                 with col2:
                     st.title(title)
