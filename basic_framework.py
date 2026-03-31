@@ -92,7 +92,7 @@ else:
         st.title("视频检索")
         st.write("---")
 
-        ori_list = ["bilibili", "腾讯视频", "爱奇艺"]
+        ori_list = ["腾讯视频", "bilibili", "爱奇艺"]
         input_words = st.text_input("输入关键词：")
         ori_search = st.selectbox("搜索源：", ori_list)
         if st.button("搜索"):
@@ -140,7 +140,7 @@ else:
             st.write(f"播放链接：{play_url}")
 
         with col3:
-            select_ana = st.selectbox("选择解析头：", analyse_headers.keys())
+            select_ana = st.selectbox("选择解析：", analyse_headers.keys())
 
         st.write("---")
 
