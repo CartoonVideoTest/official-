@@ -1,8 +1,10 @@
 import streamlit as st
 from ori_scripts.bilibili_script import bilibili_search as search_b
 from ori_scripts.bilibili_script import bilibili_detail as detail_b
-
-
+from ori_scripts.tencent_script import tencent_search as search_t
+from ori_scripts.tencent_script import tencent_detail as detail_t
+from ori_scripts.iqiyi_script import iqiyi_search as search_i
+from ori_scripts.iqiyi_script import iqiyi_detail as detail_i
 
 
 
@@ -23,6 +25,36 @@ def embed_video_iframe(video_url):
     """
     st.markdown(iframe_html, unsafe_allow_html=True)
 
+def video_show_page(search_def, detail_def):
+
+    if st.session_state["search_data"] != {}:
+        results = st.session_state["search_data"]
+    else:
+        results = search_def(input_words)
+        st.session_state["search_data"] = results
+
+    if not results:
+        st.warning("未检索到相关视频")
+
+    for title, video_detail in results.items():
+        img_url = video_detail[0]
+        count_url = video_detail[1]
+
+        col1, col2 = st.columns(2)
+        with col1:
+            st.image(img_url)
+
+        with col2:
+            st.title(title)
+            counts = detail_def(count_url)
+            select_count = st.selectbox("选择：", counts.keys(), key=title)
+            if st.button("播放", key=f"{title}_{select_count}"):
+                st.session_state["search"] = False
+                st.session_state["play"] = True
+                st.session_state["select_v"] = [title, select_count, counts[select_count]]
+                st.rerun()
+
+        st.write("---")
 
 
 if "search" not in st.session_state:
@@ -40,7 +72,8 @@ if "ensure_play" not in st.session_state:
 
 if not st.session_state["ensure_play"]:
     st.success("此网站只用于测试，无商业用途")
-    st.warning("视频内的广告请勿轻信")
+    st.error("视频内的广告请勿轻信")
+    st.warning("上当受骗鄙人概不负责")
     c1, c2 = st.columns(2)
     with c1:
         if st.button("了解", key="ensure"):
@@ -53,6 +86,7 @@ if not st.session_state["ensure_play"]:
 
 
 else:
+
     # 正式框架
     with st.sidebar:
         st.title("视频检索")
@@ -73,41 +107,13 @@ else:
         st.write("---")
 
         if ori_search == "bilibili":
-            if st.session_state["search_data"] != {}:
-                results =  st.session_state["search_data"]
-            else:
-                results = search_b(input_words)
-                st.session_state["search_data"] = results
-
-            if not results:
-                st.warning("未检索到相关视频")
-
-            for title, video_detail in results.items():
-                img_url = video_detail[0]
-                count_url = video_detail[1]
-
-                col1, col2 = st.columns(2)
-                with col1:
-                    st.image(img_url)
-
-                with col2:
-                    st.title(title)
-                    counts = detail_b(count_url)
-                    select_count = st.selectbox("选择：", counts.keys(), key=title)
-                    if st.button("播放", key=f"{title}_{select_count}"):
-                        st.session_state["search"] = False
-                        st.session_state["play"] = True
-                        st.session_state["select_v"] = [title, select_count, counts[select_count]]
-                        st.rerun()
-
-                st.write("---")
+            video_show_page(search_b, detail_b)
 
         if ori_search == "腾讯视频":
-            st.write(f"搜索源：{ori_search}")
-            st.write(f"搜索词：{input_words}")
+            video_show_page(search_t, detail_t)
+
         if ori_search == "爱奇艺":
-            st.write(f"搜索源：{ori_search}")
-            st.write(f"搜索词：{input_words}")
+            video_show_page(search_i, detail_i)
 
 
     if st.session_state["play"]:
@@ -138,7 +144,6 @@ else:
 
         st.write("---")
 
-        """ 正式播放 """
         embed_video_iframe(analyse_headers[select_ana] + play_url)
 
 
